@@ -16,9 +16,9 @@ public class DefaultCriaPaisUseCase extends CriaPaisUseCase {
     }
 
     @Override
-    public CriaPaisOutput execute(CriaPaisCommand umCommand) {
-        final var umNome = umCommand.nome();
-        final var isAtivo = umCommand.ativo();
+    public CriaPaisOutput execute(CriaPaisCommand aCommand) {
+        final var umNome = aCommand.nome();
+        final var isAtivo = aCommand.ativo();
 
         final var notification = Notification.create();
 
