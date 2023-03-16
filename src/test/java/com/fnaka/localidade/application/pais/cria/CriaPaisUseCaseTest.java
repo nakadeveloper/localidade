@@ -82,14 +82,16 @@ class CriaPaisUseCaseTest extends UseCaseTest {
         assertNotNull(actualOutput);
         assertNotNull(actualOutput.id());
 
-        verify(paisGateway).create(argThat(umPais ->
-                Objects.equals(expectedNome, umPais.getNome())
-                        && Objects.equals(expectedIsAtivo, umPais.isAtivo())
-                        && Objects.nonNull(umPais.getId())
-                        && Objects.nonNull(umPais.getCriadoEm())
-                        && Objects.nonNull(umPais.getAtualizadoEm())
-                        && Objects.nonNull(umPais.getExcluidoEm())
-        ));
+        final var captor = ArgumentCaptor.forClass(Pais.class);
+        verify(paisGateway).create(captor.capture());
+        final var actualPais = captor.getValue();
+
+        assertNotNull(actualPais.getId());
+        assertEquals(expectedNome, actualPais.getNome());
+        assertEquals(expectedIsAtivo, actualPais.isAtivo());
+        assertNotNull(actualPais.getCriadoEm());
+        assertNotNull(actualPais.getAtualizadoEm());
+        assertNotNull(actualPais.getExcluidoEm());
     }
 
     @Test
