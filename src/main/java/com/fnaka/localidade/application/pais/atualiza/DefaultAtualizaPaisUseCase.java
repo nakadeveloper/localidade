@@ -23,14 +23,14 @@ public class DefaultAtualizaPaisUseCase extends AtualizaPaisUseCase {
     @Override
     public AtualizaPaisOutput execute(final AtualizaPaisCommand aCommand) {
         final var anId = PaisID.from(aCommand.id());
-        final var aNome = aCommand.nome();
+        final var umNome = aCommand.nome();
         final var isAtivo = aCommand.ativo();
 
-        final var aPais = this.paisGateway.findById(anId)
+        final var umPais = this.paisGateway.findById(anId)
                 .orElseThrow(notFound(anId));
 
         final var notification = Notification.create();
-        notification.validate(() -> aPais.atualiza(aNome, isAtivo));
+        notification.validate(() -> umPais.atualiza(umNome, isAtivo));
 
         if (notification.hasError()) {
             throw new NotificationException(
@@ -38,7 +38,7 @@ public class DefaultAtualizaPaisUseCase extends AtualizaPaisUseCase {
             );
         }
 
-        return AtualizaPaisOutput.from(this.paisGateway.update(aPais));
+        return AtualizaPaisOutput.from(this.paisGateway.update(umPais));
     }
 
     private Supplier<DomainException> notFound(final Identifier anId) {
