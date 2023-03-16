@@ -1,4 +1,4 @@
-package fnaka.localidade;
+package com.fnaka.localidade.infrastructure;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
