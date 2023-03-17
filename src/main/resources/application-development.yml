@@ -1,0 +1,12 @@
+mysql:
+  username: root
+  password: 123456
+  schema: endereco
+  url: localhost:3306
+
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 10 # Generally this should ne reasonbly high, at least 10 per CPU core: https://undertow.io/undertow-docs/undertow-docs-2.1.0/index.html#listeners-2
+      io: 2 # One IO thread per CPU core is a reasonable default: https://undertow.io/undertow-docs/undertow-docs-2.1.0/index.html#listeners-2
