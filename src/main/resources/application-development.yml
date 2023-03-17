@@ -1,7 +1,7 @@
 mysql:
   username: root
   password: 123456
-  schema: endereco
+  schema: localidade
   url: localhost:3306
 
 server:
