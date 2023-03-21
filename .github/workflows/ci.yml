@@ -1,7 +1,9 @@
 name: CI Pipeline
 
 on:
-  push:
+  pull_request:
+    branches:
+      - develop
   # habilitar o gatilho manual atraves da interface do Github Actions
   workflow_dispatch:
 
