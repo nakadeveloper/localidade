@@ -213,7 +213,7 @@ class PaisAPITest {
         final var aCommand = new AtualizaPaisRequest(expectedNome, expectedAtivo);
 
         when(atualizaPaisUseCase.execute(any()))
-                .thenReturn(AtualizaPaisOutput.from(aPais));
+                .thenReturn(Right(AtualizaPaisOutput.from(aPais)));
 
         // when
         final var aRequest = put("/paises/{id}", expectedId)

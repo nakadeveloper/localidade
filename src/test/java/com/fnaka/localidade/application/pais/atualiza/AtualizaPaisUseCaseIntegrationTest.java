@@ -3,7 +3,6 @@ package com.fnaka.localidade.application.pais.atualiza;
 import com.fnaka.localidade.Fixture;
 import com.fnaka.localidade.IntegrationTest;
 import com.fnaka.localidade.domain.exceptions.NotFoundException;
-import com.fnaka.localidade.domain.exceptions.NotificationException;
 import com.fnaka.localidade.domain.pais.Pais;
 import com.fnaka.localidade.domain.pais.PaisGateway;
 import com.fnaka.localidade.domain.pais.PaisID;
@@ -47,7 +46,7 @@ class AtualizaPaisUseCaseIntegrationTest {
         );
 
         // when
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
 
         // then
         assertNotNull(actualOutput);
@@ -84,15 +83,14 @@ class AtualizaPaisUseCaseIntegrationTest {
         );
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(aCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
+
 
         // then
-        assertNotNull(actualException);
+        assertNotNull(notification);
 
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(paisGateway).findById(any());
         verify(paisGateway, times(0)).update(any());

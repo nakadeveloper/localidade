@@ -1,7 +1,5 @@
 package com.fnaka.localidade.infrastructure.api;
 
-import com.fnaka.localidade.application.pais.atualiza.AtualizaPaisOutput;
-import com.fnaka.localidade.application.pais.cria.CriaPaisOutput;
 import com.fnaka.localidade.domain.pagination.Pagination;
 import com.fnaka.localidade.infrastructure.pais.models.AtualizaPaisRequest;
 import com.fnaka.localidade.infrastructure.pais.models.CriaPaisRequest;
@@ -69,5 +67,5 @@ public interface PaisAPI {
             @ApiResponse(responseCode = "404", description = "Pais nao encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor"),
     })
-    ResponseEntity<AtualizaPaisOutput> atualiza(@PathVariable(name = "id") String id, @RequestBody AtualizaPaisRequest input);
+    ResponseEntity<?> atualiza(@PathVariable(name = "id") String id, @RequestBody AtualizaPaisRequest input);
 }
