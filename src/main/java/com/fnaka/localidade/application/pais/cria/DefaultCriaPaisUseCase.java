@@ -4,8 +4,13 @@ import com.fnaka.localidade.domain.exceptions.NotificationException;
 import com.fnaka.localidade.domain.pais.Pais;
 import com.fnaka.localidade.domain.pais.PaisGateway;
 import com.fnaka.localidade.domain.validation.handler.Notification;
+import io.vavr.API;
+import io.vavr.control.Either;
+
 
 import java.util.Objects;
+
+import static io.vavr.API.Try;
 
 public class DefaultCriaPaisUseCase extends CriaPaisUseCase {
 
@@ -16,7 +21,7 @@ public class DefaultCriaPaisUseCase extends CriaPaisUseCase {
     }
 
     @Override
-    public CriaPaisOutput execute(CriaPaisCommand aCommand) {
+    public Either<Notification, CriaPaisOutput> execute(CriaPaisCommand aCommand) {
         final var umNome = aCommand.nome();
         final var isAtivo = aCommand.ativo();
 
@@ -24,10 +29,12 @@ public class DefaultCriaPaisUseCase extends CriaPaisUseCase {
 
         final var umPais = notification.validate(() -> Pais.newPais(umNome, isAtivo));
 
-        if (notification.hasError()) {
-            throw new NotificationException("Nao foi possivel criar agregado Pais", notification);
-        }
+        return notification.hasError() ? API.Left(notification) : create(umPais);
+    }
 
-        return CriaPaisOutput.from(this.paisGateway.create(umPais));
+    private Either<Notification, CriaPaisOutput> create(Pais umPais) {
+        return Try(() -> this.paisGateway.create(umPais))
+                .toEither()
+                .bimap(Notification::create, CriaPaisOutput::from);
     }
 }

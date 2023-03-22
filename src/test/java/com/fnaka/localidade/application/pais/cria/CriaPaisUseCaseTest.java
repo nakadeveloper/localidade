@@ -44,7 +44,7 @@ class CriaPaisUseCaseTest extends UseCaseTest {
                 .thenAnswer(returnsFirstArg());
 
         // when
-        final var actualOutput = useCase.execute(umCommand);
+        final var actualOutput = useCase.execute(umCommand).get();
 
         // then
         assertNotNull(actualOutput);
@@ -76,7 +76,7 @@ class CriaPaisUseCaseTest extends UseCaseTest {
                 .thenAnswer(returnsFirstArg());
 
         // when
-        final var actualOutput = useCase.execute(umCommand);
+        final var actualOutput = useCase.execute(umCommand).get();
 
         // then
         assertNotNull(actualOutput);
@@ -100,17 +100,15 @@ class CriaPaisUseCaseTest extends UseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'nome' nao deve ser nulo";
 
-        final var umCommand = CriaPaisCommand.with(null, true);
+        final var aCommand = CriaPaisCommand.with(null, true);
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(umCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
     }
 
     @Test
@@ -122,14 +120,12 @@ class CriaPaisUseCaseTest extends UseCaseTest {
         final var umCommand = CriaPaisCommand.with(" ", true);
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(umCommand)
-        );
+        final var notification = useCase.execute(umCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(paisGateway, times(0)).create(any());
     }
@@ -148,14 +144,12 @@ class CriaPaisUseCaseTest extends UseCaseTest {
         );
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(umCommand)
-        );
+        final var notification = useCase.execute(umCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(paisGateway, times(0)).create(any());
     }
@@ -169,14 +163,12 @@ class CriaPaisUseCaseTest extends UseCaseTest {
         final var umCommand = CriaPaisCommand.with("as",true);
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(umCommand)
-        );
+        final var notification = useCase.execute(umCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(paisGateway, times(0)).create(any());
     }

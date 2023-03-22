@@ -22,6 +22,7 @@
 
         <mysql-connector-java.version>8.0.29</mysql-connector-java.version>
         <springdoc-openapi.version>1.6.8</springdoc-openapi.version>
+        <vavr.version>0.10.4</vavr.version>
         <javafaker.version>1.0.2</javafaker.version>
         <h2.version>2.1.210</h2.version>
     </properties>
@@ -68,6 +69,13 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-afterburner</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springdoc</groupId>
