@@ -54,7 +54,7 @@ class AtualizaPaisUseCaseTest extends UseCaseTest {
                 .thenAnswer(returnsFirstArg());
 
         // when
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
 
         // then
         assertNotNull(actualOutput);
@@ -96,7 +96,7 @@ class AtualizaPaisUseCaseTest extends UseCaseTest {
                 .thenAnswer(returnsFirstArg());
 
         // when
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
 
         // then
         assertNotNull(actualOutput);
@@ -135,13 +135,11 @@ class AtualizaPaisUseCaseTest extends UseCaseTest {
                 .thenReturn(Optional.of(Pais.with(umPais)));
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(aCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
 
         // then
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         verify(paisGateway).findById(eq(expectedId));
 
@@ -167,13 +165,11 @@ class AtualizaPaisUseCaseTest extends UseCaseTest {
                 .thenReturn(Optional.of(Pais.with(umPais)));
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(aCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
 
         // then
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         verify(paisGateway).findById(eq(expectedId));
 
@@ -201,14 +197,12 @@ class AtualizaPaisUseCaseTest extends UseCaseTest {
                 .thenReturn(Optional.of(Pais.with(umPais)));
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(aCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         verify(paisGateway).findById(eq(expectedId));
 
@@ -234,14 +228,12 @@ class AtualizaPaisUseCaseTest extends UseCaseTest {
                 .thenReturn(Optional.of(Pais.with(umPais)));
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(aCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getFirstError().message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         verify(paisGateway).findById(eq(expectedId));
 

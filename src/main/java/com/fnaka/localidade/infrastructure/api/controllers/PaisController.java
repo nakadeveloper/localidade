@@ -76,15 +76,19 @@ public class PaisController implements PaisAPI {
     }
 
     @Override
-    public ResponseEntity<AtualizaPaisOutput> atualiza(final String id, final AtualizaPaisRequest input) {
+    public ResponseEntity<?> atualiza(final String id, final AtualizaPaisRequest input) {
         final var aCommand = AtualizaPaisCommand.with(
                 id,
                 input.nome(),
                 input.ativo()
         );
 
-        final var output = this.atualizaPaisUseCase.execute(aCommand);
+        final Function<Notification, ResponseEntity<?>> onError = notification ->
+                ResponseEntity.unprocessableEntity().body(notification);
 
-        return ResponseEntity.ok(output);
+        final Function<AtualizaPaisOutput, ResponseEntity<?>> onSuccess = ResponseEntity::ok;
+
+        return this.atualizaPaisUseCase.execute(aCommand)
+                .fold(onError, onSuccess);
     }
 }

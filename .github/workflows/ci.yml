@@ -22,7 +22,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          cache:  'maven'
+          cache: 'maven'
       # 3. Executar os testes da aplicacao
       - name: Run application tests
         run: ./mvnw test
