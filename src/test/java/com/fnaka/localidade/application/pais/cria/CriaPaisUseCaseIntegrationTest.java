@@ -1,8 +1,7 @@
 package com.fnaka.localidade.application.pais.cria;
 
-import com.fnaka.localidade.IntegrationTest;
 import com.fnaka.localidade.Fixture;
-import com.fnaka.localidade.domain.exceptions.NotificationException;
+import com.fnaka.localidade.IntegrationTest;
 import com.fnaka.localidade.domain.pais.PaisGateway;
 import com.fnaka.localidade.infrastructure.pais.persistence.PaisRepository;
 import org.junit.jupiter.api.Test;
@@ -11,8 +10,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @IntegrationTest
 class CriaPaisUseCaseIntegrationTest {
@@ -35,7 +33,7 @@ class CriaPaisUseCaseIntegrationTest {
         final var aCommand = CriaPaisCommand.with(expectedNome, expectedIsAtivo);
 
         // when
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
 
         // then
         assertNotNull(actualOutput);
@@ -64,16 +62,35 @@ class CriaPaisUseCaseIntegrationTest {
         final var aCommand = CriaPaisCommand.with(expectedNome, expectedIsAtivo);
 
         // when
-        final var actualException = assertThrows(
-                NotificationException.class, () -> useCase.execute(aCommand)
-        );
+        final var notification = useCase.execute(aCommand).getLeft();
 
         // then
-        assertNotNull(actualException);
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        assertNotNull(notification);
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(paisGateway, times(0)).create(any());
+    }
+
+    @Test
+    void givenAValidCommand_whenGatewayThrowsRandomException_thenShouldReturnANotification() {
+
+        final var expectedNome = Fixture.Pais.nome();
+        final var expectedIsAtivo = true;
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "Gateway error";
+
+        final var aCommand =
+                CriaPaisCommand.with(expectedNome, expectedIsAtivo);
+
+        doThrow(new IllegalStateException(expectedErrorMessage))
+                .when(paisGateway).create(any());
+
+        final var notification = useCase.execute(aCommand).getLeft();
+
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
+
     }
 
 }

@@ -29,7 +29,7 @@ public interface PaisAPI {
             @ApiResponse(responseCode = "422", description = "Um erro de validacao foi encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor"),
     })
-    ResponseEntity<CriaPaisOutput> criaPais(@RequestBody CriaPaisRequest input);
+    ResponseEntity<?> criaPais(@RequestBody CriaPaisRequest input);
 
     @GetMapping
     @Operation(summary = "Lista todos paises paginados")

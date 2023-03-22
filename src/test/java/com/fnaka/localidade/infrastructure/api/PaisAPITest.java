@@ -23,6 +23,8 @@ import com.fnaka.localidade.domain.validation.Error;
 import com.fnaka.localidade.domain.validation.handler.Notification;
 import com.fnaka.localidade.infrastructure.pais.models.AtualizaPaisRequest;
 import com.fnaka.localidade.infrastructure.pais.models.CriaPaisRequest;
+import io.vavr.API;
+import io.vavr.control.Either;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static io.vavr.API.Right;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -78,7 +81,7 @@ class PaisAPITest {
         final var aCommand = new CriaPaisRequest(expectedNome, expectedAtivo);
 
         when(criaPaisUseCase.execute(any()))
-                .thenReturn(CriaPaisOutput.from(expectedId));
+                .thenReturn(Right(CriaPaisOutput.from(expectedId)));
 
         // when
         final var aRequest = post("/paises")

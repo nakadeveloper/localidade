@@ -10,6 +10,7 @@ import com.fnaka.localidade.application.pais.cria.CriaPaisOutput;
 import com.fnaka.localidade.application.pais.cria.CriaPaisUseCase;
 import com.fnaka.localidade.domain.pagination.Pagination;
 import com.fnaka.localidade.domain.pagination.SearchQuery;
+import com.fnaka.localidade.domain.validation.handler.Notification;
 import com.fnaka.localidade.infrastructure.api.PaisAPI;
 import com.fnaka.localidade.infrastructure.pais.models.AtualizaPaisRequest;
 import com.fnaka.localidade.infrastructure.pais.models.CriaPaisRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.function.Function;
 
 @RestController
 public class PaisController implements PaisAPI {
@@ -43,14 +45,17 @@ public class PaisController implements PaisAPI {
     }
 
     @Override
-    public ResponseEntity<CriaPaisOutput> criaPais(final CriaPaisRequest input) {
+    public ResponseEntity<?> criaPais(final CriaPaisRequest input) {
         final var aCommand = CriaPaisCommand.with(input.nome(), input.ativo());
 
-        final var output = this.criaPaisUseCase.execute(aCommand);
+        final Function<Notification, ResponseEntity<?>> onError = notification ->
+                ResponseEntity.unprocessableEntity().body(notification);
 
-        return ResponseEntity
-                .created(URI.create("/paises/" + output.id()))
-                .body(output);
+        final Function<CriaPaisOutput, ResponseEntity<?>> onSuccess = output ->
+                ResponseEntity.created(URI.create("/paises/" + output.id())).body(output);
+
+        return this.criaPaisUseCase.execute(aCommand)
+                .fold(onError, onSuccess);
     }
 
     @Override
