@@ -38,13 +38,13 @@ class CriaPaisUseCaseTest extends UseCaseTest {
         final var expectedNome = Fixture.Pais.nome();
         final var expectedIsAtivo = true;
 
-        final var umCommand = CriaPaisCommand.with(expectedNome, expectedIsAtivo);
+        final var aCommand = CriaPaisCommand.with(expectedNome, expectedIsAtivo);
 
         when(paisGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
         // when
-        final var actualOutput = useCase.execute(umCommand).get();
+        final var actualOutput = useCase.execute(aCommand).get();
 
         // then
         assertNotNull(actualOutput);
