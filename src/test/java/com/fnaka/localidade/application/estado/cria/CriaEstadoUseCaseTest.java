@@ -68,4 +68,41 @@ class CriaEstadoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualEstado.getAtualizadoEm());
         Assertions.assertNull(actualEstado.getExcluidoEm());
     }
+
+    @Test
+    void givenAValidCommandWithEstadoInativo_whenCallsCriaEstado_shouldReturnEstadoId() {
+        // given
+        final var expectedNome = "Sao Paulo";
+        final var expectedUf = "SP";
+        final var expectedPaisId = PaisID.unique();
+        final var expectedAtivo = false;
+
+        final var aCommand = CriaEstadoCommand.with(
+                expectedNome, expectedUf, expectedPaisId.getValue(), expectedAtivo
+        );
+
+        when(paisGateway.existsById(expectedPaisId))
+                .thenReturn(true);
+        when(estadoGateway.create(any()))
+                .thenAnswer(returnsFirstArg());
+
+        // when
+        final var actualOutput = useCase.execute(aCommand).get();
+
+        // then
+        Assertions.assertNotNull(actualOutput);
+        Assertions.assertNotNull(actualOutput.id());
+
+        final var captor = ArgumentCaptor.forClass(Estado.class);
+        verify(estadoGateway).create(captor.capture());
+        final var actualEstado = captor.getValue();
+
+        Assertions.assertEquals(expectedNome, actualEstado.getNome());
+        Assertions.assertEquals(expectedUf, actualEstado.getUf());
+        Assertions.assertEquals(expectedPaisId, actualEstado.getPaisId());
+        Assertions.assertEquals(expectedAtivo, actualEstado.isAtivo());
+        Assertions.assertNotNull(actualEstado.getCriadoEm());
+        Assertions.assertNotNull(actualEstado.getAtualizadoEm());
+        Assertions.assertNotNull(actualEstado.getExcluidoEm());
+    }
 }
