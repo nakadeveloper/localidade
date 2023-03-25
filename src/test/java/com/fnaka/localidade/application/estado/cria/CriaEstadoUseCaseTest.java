@@ -13,8 +13,7 @@ import java.util.List;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CriaEstadoUseCaseTest extends UseCaseTest {
 
@@ -104,5 +103,34 @@ class CriaEstadoUseCaseTest extends UseCaseTest {
         Assertions.assertNotNull(actualEstado.getCriadoEm());
         Assertions.assertNotNull(actualEstado.getAtualizadoEm());
         Assertions.assertNotNull(actualEstado.getExcluidoEm());
+    }
+
+    @Test
+    void givenAnInvalidEmptyNome_whenCallsCriaEstado_shouldReturnNotification() {
+        // given
+        final var expectedNome = "   ";
+        final var expectedUf = "SP";
+        final var expectedPaisId = PaisID.unique();
+        final var expectedAtivo = false;
+
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "'nome' nao deve ser vazio";
+
+        final var aCommand = CriaEstadoCommand.with(
+                expectedNome, expectedUf, expectedPaisId.getValue(), expectedAtivo
+        );
+
+        when(paisGateway.existsById(expectedPaisId))
+                .thenReturn(true);
+
+        // when
+        final var actualNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertNotNull(actualNotification);
+        Assertions.assertEquals(expectedErrorCount, actualNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualNotification.firstError().message());
+
+        verify(estadoGateway, times(0)).create(any());
     }
 }
