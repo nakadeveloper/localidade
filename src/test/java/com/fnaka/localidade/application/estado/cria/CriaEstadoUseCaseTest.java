@@ -133,4 +133,20 @@ class CriaEstadoUseCaseTest extends UseCaseTest {
 
         verify(estadoGateway, times(0)).create(any());
     }
+
+
+    void givenAnInvalidNullNome_whenCallsCriaEstado_shouldReturnsNotification() {
+    }
+
+    void givenAnInvalidLengthUf_whenCallsCriaEstado_shouldReturnsNotification() {
+    }
+
+    void givenInvalidNullUf_whenCallsCriaEstado_shouldReturnsNotification() {
+    }
+
+    void givenInvalidNullNomeAndNullUf_whenCallsCriaEstado_shouldReturnsNotification() {
+    }
+
+    void givenInvalidPaisId_whenCallsCriaEstado_shouldReturnsNotification() {
+    }
 }
